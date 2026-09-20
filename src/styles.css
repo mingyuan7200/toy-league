@@ -82,6 +82,8 @@ h1, h2 { font-family: 'Space Grotesk', sans-serif; }
   cursor: pointer;
 }
 .menu-button.primary:active { transform: scale(.98); }
+.menu-button.secondary-action { display: flex; justify-content: space-between; align-items: center; color: #d9e2f1; cursor: pointer; }
+.menu-button.secondary-action:active { transform: scale(.98); }
 .menu-button:disabled { opacity: .58; }
 .coming-soon { margin: 20px 0 0; color: #56647b; font-size: 12px; }
 
@@ -223,6 +225,26 @@ h1, h2 { font-family: 'Space Grotesk', sans-serif; }
 .round-history tr.latest-round > * { background-color: rgba(130,108,255,.12); }
 .round-history tr.latest-round > th { color: #c0b7ff; box-shadow: inset 3px 0 #826cff; }
 .round-history tr.latest-round td.round-winner { background: linear-gradient(rgba(130,108,255,.12), rgba(130,108,255,.12)), rgba(85,226,216,.08); }
+
+.countries-shell { width: min(100%, 620px); margin: 0 auto; }
+.countries-summary { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; margin: 28px 0 18px; padding: 18px; border: 1px solid rgba(85,226,216,.15); border-radius: 20px; background: rgba(9,24,43,.65); }
+.countries-summary > div { text-align: center; }
+.countries-summary strong, .countries-summary span { display: block; }
+.countries-summary strong { color: #55e2d8; font: 700 34px 'Space Grotesk', sans-serif; }
+.countries-summary span { color: #6f8099; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.countries-summary p { margin: 0; color: #91a1b9; font-size: 13px; line-height: 1.5; }
+.countries-status { padding: 44px 20px; color: #91a1b9; text-align: center; }
+.countries-error { padding: 28px 20px; border: 1px solid rgba(255,99,123,.25); border-radius: 20px; background: rgba(100,25,40,.18); text-align: center; }
+.countries-error h2 { margin: 0 0 8px; }
+.countries-error p { margin: 0 0 18px; color: #c8a9b0; }
+.countries-error button { padding: 10px 18px; border: 0; border-radius: 10px; color: #07111f; background: #55e2d8; font-weight: 700; cursor: pointer; }
+.countries-table-wrap { overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 18px; background: rgba(9,24,43,.55); }
+.countries-table-wrap table { width: 100%; border-collapse: collapse; }
+.countries-table-wrap th, .countries-table-wrap td { padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,.065); }
+.countries-table-wrap thead th { position: sticky; top: 0; color: #7e8da5; background: #0c1b2e; font-size: 11px; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+.countries-table-wrap thead th:first-child, .countries-table-wrap td { width: 70px; color: #64748c; text-align: right; }
+.countries-table-wrap tbody th { color: #dce5f2; font-size: 14px; text-align: left; }
+.countries-table-wrap tbody tr:last-child > * { border-bottom: 0; }
 
 @media (min-width: 700px) {
   .screen { padding-top: 44px; }
