@@ -202,6 +202,27 @@ h1, h2 { font-family: 'Space Grotesk', sans-serif; }
 .stone-input-row button { min-width: 108px; padding: 0 17px; border: 0; border-radius: 14px; color: #07111f; background: #55e2d8; font-weight: 700; cursor: pointer; }
 .input-help { min-height: 18px; margin: 8px 2px 0; color: #65758e; font-size: 12px; }
 .input-help.error { color: #ff8295; }
+.round-history { margin-top: 22px; padding: 18px; border: 1px solid rgba(255,255,255,.09); border-radius: 20px; background: rgba(9,24,43,.58); }
+.history-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.history-heading .eyebrow { margin-bottom: 2px; }
+.history-heading h2 { margin: 0; font-size: 19px; }
+.history-heading > span { padding: 5px 8px; border-radius: 8px; color: #91a1b9; background: rgba(255,255,255,.06); font-size: 11px; font-weight: 700; }
+.empty-history { margin: 22px 0 8px; color: #65758e; font-size: 13px; text-align: center; }
+.history-table-wrap { overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+.round-history table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.round-history th, .round-history td { height: 52px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.07); text-align: center; }
+.round-history thead th { height: 42px; color: #7e8da5; background: rgba(255,255,255,.035); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.round-history thead th:first-child, .round-history tbody th { width: 25%; }
+.round-history tbody th { color: #73829a; font: 700 13px 'DM Sans', sans-serif; }
+.round-history tbody td { position: relative; color: #aebbd0; }
+.round-history tbody td strong { display: block; font: 700 20px 'Space Grotesk', sans-serif; }
+.round-history tbody td small { display: block; margin-top: 1px; color: #f5bd67; font-size: 9px; font-weight: 700; }
+.round-history tbody tr:last-child > * { border-bottom: 0; }
+.round-history td.round-winner { color: #55e2d8; background: rgba(85,226,216,.07); box-shadow: inset 0 -2px #55e2d8; }
+.round-history td.round-winner::after { content: 'WIN'; position: absolute; top: 5px; right: 6px; color: #55e2d8; font-size: 7px; font-weight: 700; letter-spacing: .08em; }
+.round-history tr.latest-round > * { background-color: rgba(130,108,255,.12); }
+.round-history tr.latest-round > th { color: #c0b7ff; box-shadow: inset 3px 0 #826cff; }
+.round-history tr.latest-round td.round-winner { background: linear-gradient(rgba(130,108,255,.12), rgba(130,108,255,.12)), rgba(85,226,216,.08); }
 
 @media (min-width: 700px) {
   .screen { padding-top: 44px; }

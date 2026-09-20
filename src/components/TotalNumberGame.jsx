@@ -59,21 +59,6 @@ export default function TotalNumberGame({ onExit }) {
           </div>
         </section>
 
-        {!match.isFinished && (
-          <section className={`round-result ${match.lastRound?.result ?? ''}`} aria-live="polite">
-            {match.lastRound ? <>
-              <div className="played-numbers">
-                <span><small>You</small>{match.lastRound.playerStones}</span><b>—</b><span><small>AI</small>{match.lastRound.opponentStones}</span>
-              </div>
-              <p>
-                {match.lastRound.tied
-                  ? `Same amount — point to Red (${match.lastRound.result === 'win' ? 'you' : 'AI'})`
-                  : match.lastRound.result === 'win' ? 'Point to you!' : 'Point to AI'}
-              </p>
-            </> : <p className="first-prompt">Choose how many stones to play</p>}
-          </section>
-        )}
-
         {match.isFinished ? (
           <section className="game-over" aria-live="polite">
             <div className="trophy" aria-hidden="true">{playerWon ? '★' : '◆'}</div>
@@ -106,6 +91,49 @@ export default function TotalNumberGame({ onExit }) {
               : <p className={`input-help ${error ? 'error' : ''}`}>{error || `You can play 0 to ${match.playerRemaining} stones.`}</p>}
           </form>
         )}
+
+        <section className="round-history" aria-live="polite">
+          <div className="history-heading">
+            <div><p className="eyebrow">Game history</p><h2>Past plays</h2></div>
+            <span>{match.history.length} / {match.rounds}</span>
+          </div>
+
+          {match.history.length === 0 ? (
+            <p className="empty-history">Your completed rounds will appear here.</p>
+          ) : (
+            <div className="history-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Round</th>
+                    <th scope="col">You <ColorBadge color={match.playerColor} /></th>
+                    <th scope="col">AI <ColorBadge color={match.opponentColor} /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...match.history].reverse().map((playedRound, reverseIndex) => {
+                    const roundNumber = match.history.length - reverseIndex
+                    const playerWon = playedRound.result === 'win'
+                    const tieNote = playedRound.tied ? <small>Red wins tie</small> : null
+                    return (
+                      <tr key={roundNumber} className={reverseIndex === 0 ? 'latest-round' : ''}>
+                        <th scope="row">{roundNumber}</th>
+                        <td className={playerWon ? 'round-winner' : ''}>
+                          <strong>{playedRound.playerStones}</strong>
+                          {playerWon && tieNote}
+                        </td>
+                        <td className={!playerWon ? 'round-winner' : ''}>
+                          <strong>{playedRound.opponentStones}</strong>
+                          {!playerWon && tieNote}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </section>
     </main>
   )
