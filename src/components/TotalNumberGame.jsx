@@ -5,8 +5,13 @@ function ColorBadge({ color }) {
   return <span className={`color-badge ${color}`}>{color}</span>
 }
 
-export default function TotalNumberGame({ onExit }) {
-  const match = useTotalNumberMatch()
+export default function TotalNumberGame({ onExit, leagueGame, onComplete, saving = false, saveError = '' }) {
+  const match = useTotalNumberMatch(leagueGame ? {
+    playerColor: leagueGame.playerColor,
+    redStones: 100,
+    blueStones: 112,
+    storageKey: leagueGame.storageKey,
+  } : undefined)
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
 
@@ -38,22 +43,23 @@ export default function TotalNumberGame({ onExit }) {
     <main className="screen game-screen">
       <section className="game-shell total-game-shell">
         <header className="game-header">
-          <button className="back-button" onClick={onExit} aria-label="Back to game selection">←</button>
-          <div><p className="eyebrow">Total Number Game</p><h1>Round {match.round} <span>/ {match.rounds}</span></h1></div>
+          <button className="back-button" disabled={saving} onClick={onExit} aria-label="Back">←</button>
+          <div><p className="eyebrow">{leagueGame?.label || 'Total Number Game'}</p><h1>Round {match.round} <span>/ {match.rounds}</span></h1></div>
           <div className="header-spacer" aria-hidden="true" />
         </header>
 
         <p className="role-summary">{roleSummary}</p>
+        {match.persistenceError && <p className="input-help error" role="alert">{match.persistenceError}</p>}
 
         <section className="scoreboard total-scoreboard" aria-label="Score and remaining stones">
           <div className={`score total-score ${match.playerColor}`}>
-            <span>You <ColorBadge color={match.playerColor} /></span>
+            <span>{leagueGame ? '🇨🇳 You' : 'You'} <ColorBadge color={match.playerColor} /></span>
             <strong>{match.playerScore}</strong>
             <small>{match.playerRemaining} stones left</small>
           </div>
           <div className="versus">VS</div>
           <div className={`score total-score ${match.opponentColor}`}>
-            <span>AI <ColorBadge color={match.opponentColor} /></span>
+            <span>{leagueGame?.opponentName || 'AI'} <ColorBadge color={match.opponentColor} /></span>
             <strong>{match.opponentScore}</strong>
             <small>{match.opponentRemaining} stones left</small>
           </div>
@@ -65,8 +71,16 @@ export default function TotalNumberGame({ onExit }) {
             <p className="eyebrow">Final score {match.playerScore}–{match.opponentScore}</p>
             <h2>{playerWon ? 'You win!' : 'AI wins'}</h2>
             <p>{playerWon ? 'You managed your stones best.' : 'The AI takes this one. Try a new allocation!'}</p>
-            <button className="restart-button" onClick={match.restart}>Play again</button>
-            <button className="text-button" onClick={onExit}>Back to game selection</button>
+            {leagueGame ? <>
+              <button className="restart-button" disabled={saving} onClick={() => onComplete({
+                redScore: match.playerColor === 'red' ? match.playerScore : match.opponentScore,
+                blueScore: match.playerColor === 'blue' ? match.playerScore : match.opponentScore,
+              })}>{saving ? 'Saving…' : 'Save result and return to league'}</button>
+              {saveError && <p className="input-help error" role="alert">{saveError}</p>}
+            </> : <>
+              <button className="restart-button" onClick={match.restart}>Play again</button>
+              <button className="text-button" onClick={onExit}>Back to game selection</button>
+            </>}
           </section>
         ) : (
           <form className="stone-controls" onSubmit={submitPlay}>

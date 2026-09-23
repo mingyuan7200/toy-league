@@ -1,38 +1,51 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { allocation } from '../../shared/blotto.js'
 
 const ROUNDS = 15
 const RED_STONES = 150
 const BLUE_STONES = 162
 
-function randomCutAllocation(total, rounds) {
-  const cuts = Array.from(
-    { length: rounds - 1 },
-    () => Math.floor(Math.random() * (total + 1)),
-  ).sort((a, b) => a - b)
-  const boundaries = [0, ...cuts, total]
-  return boundaries.slice(1).map((boundary, index) => boundary - boundaries[index])
-}
-
-function freshMatch() {
-  const playerColor = Math.random() < 0.5 ? 'red' : 'blue'
+function freshMatch(options = {}) {
+  const playerColor = options.playerColor || (Math.random() < 0.5 ? 'red' : 'blue')
   const opponentColor = playerColor === 'red' ? 'blue' : 'red'
-  const playerStones = playerColor === 'red' ? RED_STONES : BLUE_STONES
-  const opponentStones = opponentColor === 'red' ? RED_STONES : BLUE_STONES
+  const redStones = options.redStones ?? RED_STONES
+  const blueStones = options.blueStones ?? BLUE_STONES
+  const playerStones = playerColor === 'red' ? redStones : blueStones
+  const opponentStones = opponentColor === 'red' ? redStones : blueStones
 
   return {
     playerColor,
     opponentColor,
     playerRemaining: playerStones,
     opponentRemaining: opponentStones,
-    opponentPiles: randomCutAllocation(opponentStones, ROUNDS),
+    opponentPiles: allocation(opponentStones, ROUNDS),
     playerScore: 0,
     opponentScore: 0,
     history: [],
   }
 }
 
-export function useTotalNumberMatch() {
-  const [match, setMatch] = useState(freshMatch)
+export function useTotalNumberMatch(options = {}) {
+  const [persistenceError, setPersistenceError] = useState('')
+  const [match, setMatch] = useState(() => {
+    if (options.storageKey) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(options.storageKey))
+        if (saved && saved.playerColor === options.playerColor && Array.isArray(saved.history) && saved.history.length <= ROUNDS && saved.opponentPiles?.length === ROUNDS) return saved
+      } catch { /* A blocked or damaged local save must not prevent playing. */ }
+    }
+    return freshMatch(options)
+  })
+
+  useEffect(() => {
+    if (!options.storageKey) return
+    try {
+      localStorage.setItem(options.storageKey, JSON.stringify(match))
+      setPersistenceError('')
+    } catch {
+      setPersistenceError('Your browser could not save this unfinished game. Keep this page open until you submit the result.')
+    }
+  }, [match, options.storageKey])
 
   const play = useCallback((requestedStones) => {
     setMatch((current) => {
@@ -60,7 +73,7 @@ export function useTotalNumberMatch() {
     })
   }, [])
 
-  const restart = useCallback(() => setMatch(freshMatch()), [])
+  const restart = () => setMatch(freshMatch(options))
   const isFinished = match.history.length === ROUNDS
 
   return {
@@ -72,5 +85,6 @@ export function useTotalNumberMatch() {
     lastRound: match.history.at(-1) ?? null,
     play,
     restart,
+    persistenceError,
   }
 }

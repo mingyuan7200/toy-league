@@ -2,10 +2,11 @@ import { useState } from 'react'
 import NumberGame, { createNumberRange } from './components/NumberGame.jsx'
 import TotalNumberGame from './components/TotalNumberGame.jsx'
 import CountriesPage from './components/CountriesPage.jsx'
+import LeaguePage from './components/LeaguePage.jsx'
 
 const QUICK_GAME_NUMBERS = createNumberRange(1, 12)
 
-function Menu({ onQuickGame, onCountries }) {
+function Menu({ onQuickGame, onCountries, onLeague }) {
   return (
     <main className="screen menu-screen">
       <section className="menu-card">
@@ -19,8 +20,8 @@ function Menu({ onQuickGame, onCountries }) {
             <span>Quick game</span>
             <span aria-hidden="true">→</span>
           </button>
-          <button className="menu-button" disabled>Start a league</button>
-          <button className="menu-button" disabled>Resume a league</button>
+          <button className="menu-button" onClick={() => onLeague('league-start')}>Start a league</button>
+          <button className="menu-button" onClick={() => onLeague('league-resume')}>Resume a league</button>
           <button className="menu-button secondary-action" onClick={onCountries}>
             <span>Countries</span>
             <span aria-hidden="true">→</span>
@@ -63,8 +64,9 @@ export default function App() {
   const [screen, setScreen] = useState('menu')
 
   if (screen === 'menu') {
-    return <Menu onQuickGame={() => setScreen('quick-games')} onCountries={() => setScreen('countries')} />
+    return <Menu onQuickGame={() => setScreen('quick-games')} onCountries={() => setScreen('countries')} onLeague={setScreen} />
   }
+  if (screen.startsWith('league-')) return <LeaguePage startNew={screen === 'league-start'} onExit={() => setScreen('menu')} />
   if (screen === 'countries') return <CountriesPage onExit={() => setScreen('menu')} />
   if (screen === 'quick-games') {
     return <QuickGameMenu onSelect={setScreen} onExit={() => setScreen('menu')} />

@@ -5,7 +5,7 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
   headers: { 'content-type': 'application/json; charset=utf-8', ...init.headers },
 })
 
-async function ensureCountries(db) {
+export async function ensureCountries(db) {
   await db.prepare(`
     CREATE TABLE IF NOT EXISTS Country (
       id INTEGER PRIMARY KEY,
